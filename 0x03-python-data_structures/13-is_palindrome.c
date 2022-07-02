@@ -1,41 +1,72 @@
 #include "lists.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 /**
-  * is_palindrome - A function that checks if a list is a palindrome.
-  * @head: The pointer to the head of the list.
-  * Return: 0 if list not a palindrome, 1 if it is.
-  * Author: Martins Akhivbareme
-  */
+ * reverse_listint - reverses a linked list
+ * @head: pointer to the first node in the list
+ *
+ * Return: pointer to the first node in the new list
+ */
+void reverse_listint(listint_t **head)
+{
+	listint_t *prev = NULL;
+	listint_t *current = *head;
+	listint_t *next = NULL;
+
+	while (current)
+	{
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+
+	*head = prev;
+}
+
+/**
+ * is_palindrome - checks if a linked list is a palindrome
+ * @head: double pointer to the linked list
+ *
+ * Return: 1 if it is, 0 if not
+ */
 int is_palindrome(listint_t **head)
 {
-	listint_t *tmp = *head;
-	int nodes = 0, i = 0, *array = NULL;
+	listint_t *slow = *head, *fast = *head, *temp = *head, *dup = NULL;
 
-	if (*head == NULL || head == NULL || (*head)->next == NULL)
+	if (*head == NULL || (*head)->next == NULL)
 		return (1);
-	while (tmp)
+
+	while (1)
 	{
-		nodes++;
-		tmp = tmp->next;
-	}
-	array = malloc(sizeof(int) * nodes);
-	tmp = *head;
-	while (tmp)
-	{
-		array[i++] = tmp->n;
-		tmp = tmp->next;
-	}
-	for (i = 0; i < nodes / 2; i++)
-	{
-		if (array[i] != array[nodes - 1 - i])
+		fast = fast->next->next;
+		if (!fast)
 		{
-			free(array);
-			return (0);
+			dup = slow->next;
+			break;
 		}
+		if (!fast->next)
+		{
+			dup = slow->next->next;
+			break;
+		}
+		slow = slow->next;
 	}
-	free(array);
-	return (1);
+
+	reverse_listint(&dup);
+
+	while (dup && temp)
+	{
+		if (temp->n == dup->n)
+		{
+			dup = dup->next;
+			temp = temp->next;
+		}
+		else
+			return (0);
+	}
+
+	if (!dup)
+		return (1);
+
+	return (0);
 }
