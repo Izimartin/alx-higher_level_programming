@@ -10,6 +10,7 @@
  * @n: integer
  * @next: points to the next node
  *
+ * Author: Martins Akhivbareme
  * Description: singly linked list node structure
  * for Holberton project
  */
